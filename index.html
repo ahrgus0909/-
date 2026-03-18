@@ -1,0 +1,2059 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light" style=""><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로또 분석 무료 서비스 - 당첨 확률을 높이는 AI 데이터 분석</title>
+    <!-- Google Fonts: Noto Sans KR -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&amp;display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+      :root {
+        --primary: #1a2472;
+        --primary-dark: #0d1554;
+        --secondary: #2d3a9e;
+        --accent: #ffd600;
+        --accent-hover: #e6c200;
+        --text-dark: #111111;
+        --text-gray: #666666;
+        --text-light: #9fa8da;
+        --bg-light: #f0f2fc;
+        --bg-white: #ffffff;
+        --success: #4caf50;
+        --border-color: #eeeeee;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        min-width: 0;
+      }
+
+      html {
+        overflow-x: hidden;
+        max-width: 100%;
+      }
+
+      body {
+        font-family: 'Noto Sans KR', sans-serif;
+        color: var(--text-dark);
+        background-color: #f0f2fc;
+        line-height: 1.6;
+        overflow-x: hidden;
+        max-width: 100%;
+        width: 100%;
+      }
+
+      a {
+        text-decoration: none;
+        color: inherit;
+        transition: color 0.3s;
+      }
+
+      ul {
+        list-style: none;
+      }
+
+      img {
+        max-width: 100%;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        position: relative;
+      }
+
+      /* Typography */
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-weight: 700;
+        line-height: 1.3;
+      }
+
+      .section-title {
+        font-size: 32px;
+        color: var(--primary);
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .section-subtitle {
+        font-size: 20px;
+        color: var(--text-gray);
+        text-align: center;
+        margin-bottom: 30px;
+        position: relative;
+        display: inline-block;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .section-subtitle::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 3px;
+        background-color: var(--accent);
+        margin: 10px auto 0;
+      }
+
+      .highlight {
+        color: var(--accent);
+      }
+
+      /* Buttons */
+      .btn {
+        display: inline-block;
+        padding: 12px 30px;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: none;
+        text-align: center;
+      }
+
+      .btn-primary {
+        background-color: var(--accent);
+        color: var(--primary);
+      }
+
+      .btn-primary:hover {
+        background-color: var(--accent-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 214, 0, 0.4);
+      }
+
+      .btn-secondary {
+        background-color: transparent;
+        color: white;
+        border: 2px solid white;
+      }
+
+      .btn-secondary:hover {
+        background-color: white;
+        color: var(--primary);
+      }
+
+      .btn-large {
+        padding: 16px 40px;
+        font-size: 18px;
+      }
+
+      .btn-kakao {
+        background-color: var(--primary);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      /* Header */
+      header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        max-width: 100vw;
+        height: 70px;
+        background-color: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s;
+        overflow: hidden;
+      }
+
+      .nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        overflow: hidden;
+      }
+
+      .logo {
+        font-size: 24px;
+        font-weight: 900;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .logo span {
+        color: var(--accent);
+      }
+
+      .nav-menu {
+        display: flex;
+        gap: 30px;
+      }
+
+      .nav-link {
+        font-weight: 500;
+        font-size: 15px;
+        color: var(--text-dark);
+      }
+
+      .nav-link:hover {
+        color: var(--primary);
+      }
+
+      .nav-cta {
+        background-color: var(--accent);
+        color: var(--primary);
+        padding: 10px 26px;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: 700;
+        animation: pulse-yellow 2s infinite;
+      }
+
+      .nav-cta:hover {
+        background-color: var(--accent-hover);
+        color: var(--primary);
+      }
+
+      .mobile-menu-btn {
+        display: none;
+        font-size: 24px;
+        color: var(--primary);
+        cursor: pointer;
+      }
+
+      /* Profile Section */
+      .section-profile {
+        background: linear-gradient(135deg, #e8ebf8 0%, #dde1f5 100%);
+        padding: 70px 0 30px;
+        text-align: center;
+      }
+
+      .profile-img-wrap {
+        max-width: 480px;
+        margin: 0 auto;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 12px 40px rgba(26,36,114,0.13);
+        border: 1px solid #dde2f5;
+      }
+
+      .profile-img-wrap img {
+        width: 100%;
+        display: block;
+      }
+
+      /* Hero Section */
+      .hero {
+        padding-top: 100px;
+        padding-bottom: 50px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: white;
+        position: relative;
+        overflow: hidden;
+        min-height: auto;
+        display: flex;
+        align-items: center;
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 600px;
+      }
+
+      .hero h1 {
+        font-size: 48px;
+        margin-bottom: 14px;
+        line-height: 1.2;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .hero p {
+        font-size: 21px;
+        color: var(--text-light);
+        margin-bottom: 24px;
+      }
+
+      .hero-buttons {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 22px;
+      }
+
+      .trust-badges {
+        display: flex;
+        gap: 20px;
+        font-size: 18px;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 22px;
+      }
+
+      .trust-badges i {
+        color: var(--accent);
+        margin-right: 5px;
+      }
+
+      .stats-row {
+        display: flex;
+        gap: 40px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 18px;
+      }
+
+      .stat-item h3 {
+        font-size: 24px;
+        color: white;
+        margin-bottom: 5px;
+      }
+
+      .stat-item p {
+        font-size: 17px;
+        margin: 0;
+        color: var(--text-light);
+      }
+
+      /* Animated Lottery Balls */
+      .lotto-balls-bg {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 50%;
+        height: 100%;
+        z-index: 1;
+      }
+
+      .floating-ball {
+        position: absolute;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        color: white;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        box-shadow:
+          inset -5px -5px 15px rgba(0, 0, 0, 0.3),
+          inset 5px 5px 15px rgba(255, 255, 255, 0.3),
+          0 10px 20px rgba(0, 0, 0, 0.2);
+        animation: float 6s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(0px) rotate(0deg);
+        }
+        50% {
+          transform: translateY(-20px) rotate(10deg);
+        }
+        100% {
+          transform: translateY(0px) rotate(0deg);
+        }
+      }
+
+      .ball-1 {
+        width: 120px;
+        height: 120px;
+        background: #fbc400;
+        top: 20%;
+        right: 10%;
+        font-size: 40px;
+        animation-delay: 0s;
+      }
+      .ball-2 {
+        width: 80px;
+        height: 80px;
+        background: #69c8f2;
+        top: 50%;
+        right: 30%;
+        font-size: 28px;
+        animation-delay: 1s;
+      }
+      .ball-3 {
+        width: 100px;
+        height: 100px;
+        background: #ff7272;
+        top: 15%;
+        right: 35%;
+        font-size: 36px;
+        animation-delay: 2s;
+      }
+      .ball-4 {
+        width: 70px;
+        height: 70px;
+        background: #aaaaaa;
+        top: 60%;
+        right: 10%;
+        font-size: 24px;
+        animation-delay: 1.5s;
+      }
+      .ball-5 {
+        width: 90px;
+        height: 90px;
+        background: #b0d840;
+        bottom: 10%;
+        right: 25%;
+        font-size: 32px;
+        animation-delay: 0.5s;
+      }
+      .ball-6 {
+        width: 60px;
+        height: 60px;
+        background: #ff7272;
+        top: 40%;
+        right: 5%;
+        font-size: 20px;
+        animation-delay: 2.5s;
+        filter: blur(2px);
+        opacity: 0.7;
+      }
+
+      /* Section Styling */
+      section {
+        padding: 50px 0;
+      }
+
+      /* Proof Section */
+      .section-proof {
+        background-color: var(--bg-light);
+      }
+
+      .proof-label {
+        display: inline-block;
+        background-color: var(--accent);
+        color: var(--primary);
+        font-size: 12px;
+        font-weight: 700;
+        padding: 4px 12px;
+        border-radius: 20px;
+        margin-bottom: 10px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+
+      .proof-img-wrap {
+        margin-top: 20px;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+        border: 1px solid var(--border-color);
+      }
+
+      .proof-img-wrap img {
+        width: 100%;
+        display: block;
+        object-fit: cover;
+      }
+
+      .proof-caption {
+        margin-top: 12px;
+        font-size: 17px;
+        color: var(--text-gray);
+        text-align: center;
+      }
+
+      .proof-caption i {
+        color: var(--accent);
+        margin-right: 4px;
+      }
+
+      /* Info Content Wrapper */
+      .info-content {
+        flex: 1;
+        min-width: 0;
+      }
+
+      /* Why Free Section */
+      .section-why {
+        background-color: #f0f2fc;
+      }
+
+      .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-top: 24px;
+      }
+
+      .info-card {
+        background: white;
+        padding: 22px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s;
+        border: 1px solid var(--border-color);
+      }
+
+      .info-card:hover {
+        transform: translateY(-10px);
+      }
+
+      .info-card.highlight {
+        background-color: #fffde7;
+        border: 1px solid #fff9c4;
+        border-left: 4px solid var(--accent);
+      }
+
+      .card-icon {
+        width: 50px;
+        height: 50px;
+        background-color: var(--bg-light);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        color: var(--primary);
+        margin-bottom: 14px;
+      }
+
+      .info-card.highlight .card-icon {
+        background-color: rgba(255, 214, 0, 0.2);
+        color: #f57f17;
+      }
+
+      .info-card h3 {
+        font-size: 21px;
+        margin-bottom: 8px;
+        color: var(--text-dark);
+      }
+
+      .info-card p {
+        font-size: 17px;
+        color: var(--text-gray);
+        line-height: 1.5;
+      }
+
+      /* Cost Zero Section */
+      .section-cost {
+        background-color: var(--primary);
+        color: white;
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+        padding: 50px 0;
+      }
+
+      .watermark {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-10deg);
+        font-size: 20vw;
+        font-weight: 900;
+        color: white;
+        opacity: 0.04;
+        pointer-events: none;
+        z-index: 0;
+        white-space: nowrap;
+      }
+
+      .cost-content {
+        position: relative;
+        z-index: 1;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .section-cost .section-title {
+        color: white;
+        margin-bottom: 40px;
+      }
+
+      .price-table {
+        background-color: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .price-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 13px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      }
+
+      .price-row:last-child {
+        border-bottom: none;
+      }
+
+      .price-label {
+        font-size: 19px;
+        font-weight: 500;
+      }
+
+      .price-value {
+        color: var(--accent);
+        font-weight: 700;
+        font-size: 19px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .footer-note {
+        margin-top: 20px;
+        color: var(--text-light);
+        font-size: 17px;
+      }
+
+      /* Criteria Section */
+      .section-criteria {
+        background-color: var(--bg-light);
+      }
+
+      .criteria-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+
+
+
+      .criteria-item:hover {
+        border-color: var(--primary);
+        transform: translateX(5px);
+      }
+
+      .criteria-num {
+        width: 40px;
+        height: 40px;
+        background-color: var(--primary);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+
+      .criteria-text {
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--text-dark);
+        line-height: 1.4;
+        word-break: keep-all;
+      }
+
+      .criteria-item {
+        background: white;
+        padding: 18px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+        border: 1px solid transparent;
+        transition: all 0.3s;
+        min-height: 70px;
+      }
+
+      /* How it works */
+      .section-how {
+        background-color: #f0f2fc;
+      }
+
+      .steps-container {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        margin-top: 30px;
+      }
+
+      .steps-container::before {
+        content: '';
+        position: absolute;
+        top: 40px;
+        left: 10%;
+        width: 80%;
+        height: 2px;
+        background: repeating-linear-gradient(90deg, #ddd 0, #ddd 10px, transparent 10px, transparent 20px);
+        z-index: 0;
+      }
+
+      .step-item {
+        flex: 1;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+        padding: 0 20px;
+      }
+
+      .step-icon-wrapper {
+        width: 70px;
+        height: 70px;
+        background-color: white;
+        border: 2px solid var(--primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 14px;
+        font-size: 26px;
+        color: var(--primary);
+        position: relative;
+      }
+
+      .step-num {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        width: 30px;
+        height: 30px;
+        background-color: var(--accent);
+        color: var(--primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 14px;
+      }
+
+      .step-title {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 7px;
+        color: var(--primary);
+      }
+
+      .step-desc {
+        font-size: 17px;
+        color: var(--text-gray);
+        line-height: 1.4;
+      }
+
+      /* Simulator */
+      .section-simulator {
+        background-color: #f0f2fc;
+        text-align: center;
+      }
+
+      .simulator-box {
+        background: white;
+        padding: 28px;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .disclaimer {
+        font-size: 17px;
+        color: #999;
+        margin-bottom: 18px;
+        word-break: keep-all;
+      }
+
+      .lotto-row {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 12px;
+        flex-wrap: nowrap;
+      }
+
+      .lotto-ball {
+        width: 45px;
+        height: 45px;
+        min-width: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 18px;
+        box-shadow:
+          inset -2px -2px 5px rgba(0, 0, 0, 0.2),
+          0 3px 5px rgba(0, 0, 0, 0.1);
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+      }
+
+      .ball-yellow {
+        background-color: #fbc400;
+      }
+      .ball-blue {
+        background-color: #69c8f2;
+      }
+      .ball-red {
+        background-color: #ff7272;
+      }
+      .ball-gray {
+        background-color: #aaaaaa;
+      }
+      .ball-green {
+        background-color: #b0d840;
+      }
+
+      /* Mosaic (Blur) Overlay */
+      .mosaic-wrapper {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+      }
+
+      .lotto-rows-inner {
+        filter: blur(8px);
+        user-select: none;
+        pointer-events: none;
+      }
+
+      .mosaic-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: rgba(26, 36, 114, 0.08);
+        border-radius: 12px;
+        cursor: pointer;
+      }
+
+      .mosaic-lock-icon {
+        width: 54px;
+        height: 54px;
+        background: var(--primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--accent);
+        font-size: 22px;
+        box-shadow: 0 4px 14px rgba(26,36,114,0.25);
+      }
+
+      .mosaic-lock-text {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--primary);
+        background: rgba(255,255,255,0.92);
+        padding: 5px 14px;
+        border-radius: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        white-space: nowrap;
+      }
+
+      @media (max-width: 480px) {
+        .mosaic-lock-icon {
+          width: 40px;
+          height: 40px;
+          font-size: 16px;
+        }
+        .mosaic-lock-text {
+          font-size: 11px;
+          padding: 4px 10px;
+        }
+      }
+
+      /* FAQ */
+      .section-faq {
+        background-color: #f0f2fc;
+        padding: 50px 0;
+      }
+
+      .faq-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 16px;
+        padding: 10px 24px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      }
+
+      .faq-item {
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .faq-question {
+        padding: 17px 0;
+        font-size: 20px;
+        font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: color 0.3s;
+      }
+
+      .faq-question:hover {
+        color: var(--primary);
+      }
+
+      .faq-question i {
+        color: var(--text-gray);
+        font-size: 14px;
+        transition: transform 0.3s;
+      }
+
+      .faq-item.active .faq-question i {
+        transform: rotate(180deg);
+        color: var(--primary);
+      }
+
+      .faq-item.active .faq-question {
+        color: var(--primary);
+      }
+
+      .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+        color: var(--text-gray);
+        line-height: 1.6;
+      }
+
+      .faq-answer p {
+        padding-bottom: 14px;
+        font-size: 17px;
+      }
+
+      /* CTA Banner */
+      .section-cta {
+        background: linear-gradient(135deg, #ffd600 0%, #ffb300 100%);
+        padding: 50px 0;
+        text-align: center;
+      }
+
+      .section-cta h2 {
+        font-size: 30px;
+        color: var(--primary);
+        margin-bottom: 8px;
+      }
+
+      .section-cta p {
+        font-size: 20px;
+        color: var(--primary-dark);
+        margin-bottom: 24px;
+        opacity: 0.8;
+      }
+
+      @keyframes pulse-yellow {
+        0% {
+          box-shadow: 0 0 0 0 rgba(255, 214, 0, 0.6);
+        }
+        70% {
+          box-shadow: 0 0 0 12px rgba(255, 214, 0, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(255, 214, 0, 0);
+        }
+      }
+
+      .btn-pulse {
+        animation: pulse-yellow 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(26, 36, 114, 0.4);
+        }
+        70% {
+          box-shadow: 0 0 0 15px rgba(26, 36, 114, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(26, 36, 114, 0);
+        }
+      }
+
+      /* Footer */
+      footer {
+        background-color: var(--primary-dark);
+        color: white;
+        padding: 40px 0 20px;
+      }
+
+      .footer-content {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 40px;
+        margin-bottom: 24px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .footer-logo {
+        font-size: 24px;
+        font-weight: 900;
+        margin-bottom: 15px;
+        display: inline-block;
+      }
+
+      .footer-logo span {
+        color: var(--accent);
+      }
+
+      .footer-tagline {
+        color: var(--text-light);
+        font-size: 18px;
+        line-height: 1.6;
+        max-width: 300px;
+      }
+
+      .footer-links h4 {
+        font-size: 16px;
+        margin-bottom: 20px;
+        color: white;
+      }
+
+      .footer-links ul li {
+        margin-bottom: 10px;
+      }
+
+      .footer-links ul li a {
+        color: var(--text-light);
+        font-size: 18px;
+        white-space: nowrap;
+      }
+
+      .footer-links ul li a:hover {
+        color: var(--accent);
+      }
+
+      .footer-bottom {
+        text-align: center;
+        font-size: 13px;
+        color: #666;
+      }
+
+      .legal-disclaimer {
+        margin-top: 15px;
+        font-size: 12px;
+        color: #444;
+        background-color: rgba(0, 0, 0, 0.2);
+        padding: 10px;
+        border-radius: 4px;
+        display: inline-block;
+      }
+
+      /* ───── 플로팅 인덱스 ───── */
+      .floating-index {
+        position: fixed;
+        right: 24px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 900;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px;
+      }
+
+      .fi-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .fi-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--primary);
+        background: white;
+        border: 1px solid #dde2f5;
+        padding: 4px 10px;
+        border-radius: 20px;
+        white-space: nowrap;
+        opacity: 0;
+        transform: translateX(8px);
+        transition: all 0.25s ease;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        pointer-events: none;
+      }
+
+      .fi-item:hover .fi-label,
+      .fi-item.active .fi-label {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .fi-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #cdd2f0;
+        border: 2px solid #cdd2f0;
+        transition: all 0.3s;
+        flex-shrink: 0;
+      }
+
+      .fi-item.active .fi-dot {
+        background: var(--primary);
+        border-color: var(--primary);
+        transform: scale(1.4);
+        box-shadow: 0 0 0 3px rgba(26,36,114,0.15);
+      }
+
+      .fi-item:hover .fi-dot {
+        background: var(--secondary);
+        border-color: var(--secondary);
+      }
+
+      @media (max-width: 768px) {
+        .floating-index {
+          display: none;
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 992px) {
+        .hero h1 {
+          font-size: 40px;
+        }
+        .cards-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 480px) {
+        /* 분석 기준 2칸 유지 */
+        .criteria-item {
+          padding: 10px 8px;
+          gap: 8px;
+        }
+        .criteria-num {
+          width: 26px;
+          height: 26px;
+          font-size: 12px;
+          min-width: 26px;
+        }
+        .criteria-text {
+          font-size: 12px;
+          line-height: 1.4;
+          word-break: keep-all;
+          white-space: normal;
+          overflow: visible;
+        }
+        .criteria-item {
+          min-height: 56px;
+          padding: 10px 8px;
+          align-items: center;
+        }
+        /* 로또 번호 */
+        .simulator-box {
+          padding: 16px 10px;
+        }
+        .simulator-box h3 {
+          font-size: 15px;
+          margin-bottom: 6px !important;
+        }
+        .disclaimer {
+          font-size: 15px;
+          margin-bottom: 10px;
+        }
+        .lotto-row {
+          gap: 5px;
+          margin-bottom: 6px;
+        }
+        .lotto-ball {
+          width: 36px;
+          height: 36px;
+          min-width: 36px;
+          font-size: 13px;
+        }
+        .simulator-box > div:last-child {
+          margin-top: 14px !important;
+        }
+        /* 이용 방법 */
+        .section-how .container {
+          padding: 0 10px;
+        }
+        .steps-container {
+          flex-direction: row;
+          gap: 0;
+          margin-top: 14px;
+        }
+        .steps-container::before {
+          top: 26px;
+          left: 8%;
+          width: 84%;
+        }
+        .step-item {
+          padding: 0 4px;
+          flex: 1;
+        }
+        .step-icon-wrapper {
+          width: 50px;
+          height: 50px;
+          font-size: 18px;
+          margin-bottom: 8px;
+        }
+        .step-num {
+          width: 20px;
+          height: 20px;
+          font-size: 10px;
+          top: -4px;
+          right: -4px;
+        }
+        .step-title {
+          font-size: 14px;
+          margin-bottom: 5px;
+          word-break: keep-all;
+        }
+        .step-desc {
+          font-size: 12px;
+          line-height: 1.4;
+          word-break: keep-all;
+        }
+      }
+
+      @media (max-width: 768px) {
+        /* ───── 모바일 헤더 2줄 구조 ───── */
+        header {
+          height: auto;
+          padding: 6px 0;
+          overflow: hidden;
+        }
+        .nav-container {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 4px;
+          width: 100%;
+          max-width: 100vw;
+          overflow: hidden;
+        }
+        .logo {
+          font-size: 18px;
+          white-space: nowrap;
+          width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .nav-menu {
+          display: flex !important;
+          flex-direction: row !important;
+          position: static !important;
+          background: transparent !important;
+          box-shadow: none !important;
+          padding: 0 !important;
+          gap: 10px;
+          flex-wrap: nowrap;
+          overflow-x: auto;
+          overflow-y: hidden;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+          width: 100%;
+          max-width: 100%;
+        }
+        .nav-menu::-webkit-scrollbar { display: none; }
+        .nav-link {
+          font-size: 13px;
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+        .nav-cta {
+          font-size: 15px;
+          padding: 8px 18px;
+          white-space: nowrap;
+          flex-shrink: 0;
+          background-color: var(--accent);
+          color: var(--primary);
+          border-radius: 22px;
+        }
+        .mobile-menu-btn {
+          display: none;
+        }
+        /* ───── 섹션 공백 전체 축소 ───── */
+        section {
+          padding: 22px 0;
+        }
+        .section-title {
+          font-size: 22px;
+          margin-bottom: 4px;
+        }
+        .section-subtitle {
+          font-size: 13px;
+          margin-bottom: 14px;
+        }
+        .section-subtitle::after {
+          margin: 6px auto 0;
+        }
+        /* ───── 히어로 ───── */
+        .hero {
+          padding-top: 90px;
+          padding-bottom: 20px;
+          text-align: center;
+        }
+        .hero-content {
+          margin: 0 auto;
+        }
+        .hero h1 {
+          font-size: 26px;
+          margin-bottom: 8px;
+          line-height: 1.3;
+        }
+        .hero p {
+          font-size: 13px;
+          margin-bottom: 12px;
+        }
+        .hero-buttons {
+          justify-content: center;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 12px;
+        }
+        .btn-large {
+          padding: 12px 28px;
+          font-size: 15px;
+        }
+        .trust-badges {
+          justify-content: center;
+          gap: 12px;
+          font-size: 12px;
+          margin-bottom: 10px;
+        }
+        .stats-row {
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 16px;
+          padding-top: 10px;
+        }
+        .stat-item h3 {
+          font-size: 18px;
+          margin-bottom: 2px;
+        }
+        .stat-item p {
+          font-size: 11px;
+        }
+        /* ───── 히어로 구슬 숨김 ───── */
+        .lotto-balls-bg {
+          display: none;
+        }
+        /* ───── 프로필 섹션 ───── */
+        .section-profile {
+          padding: 90px 0 16px;
+        }
+        .profile-img-wrap {
+          border-radius: 14px;
+          box-shadow: 0 6px 20px rgba(26,36,114,0.10);
+        }
+        /* ───── 인증 섹션 ───── */
+        .proof-img-wrap {
+          border-radius: 10px;
+          box-shadow: 0 6px 20px rgba(0,0,0,0.10);
+        }
+        .proof-caption {
+          font-size: 11px;
+        }
+        /* ───── 왜 무료인가요? 통합 카드 ───── */
+        .cards-grid {
+          grid-template-columns: 1fr;
+          gap: 0;
+          background: white;
+          border-radius: 12px;
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+          border: 1px solid var(--border-color);
+          overflow: hidden;
+          margin-top: 12px;
+        }
+        .info-card {
+          box-shadow: none;
+          border: none;
+          border-radius: 0;
+          border-bottom: 1px solid var(--border-color);
+          padding: 12px 14px;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          gap: 12px;
+          transform: none !important;
+        }
+        .info-card:last-child {
+          border-bottom: none;
+        }
+        .info-card.highlight {
+          background-color: #fffde7;
+          border-left: 4px solid var(--accent);
+          border-bottom: 1px solid var(--border-color);
+          border-top: none;
+          border-right: none;
+          border-radius: 0;
+        }
+        .info-card.highlight:last-child {
+          border-bottom: none;
+        }
+        .card-icon {
+          width: 36px;
+          height: 36px;
+          font-size: 15px;
+          flex-shrink: 0;
+          margin-bottom: 0;
+        }
+        .info-content h3 {
+          font-size: 16px;
+          margin-bottom: 4px;
+        }
+        .info-content p {
+          font-size: 14px;
+          line-height: 1.5;
+          word-break: keep-all;
+          color: var(--text-gray);
+        }
+        /* ───── 비용 ZERO ───── */
+        .section-cost {
+          padding: 22px 0;
+        }
+        .section-cost .section-title {
+          margin-bottom: 16px;
+          font-size: 22px;
+        }
+        .price-table {
+          padding: 12px;
+        }
+        .price-row {
+          padding: 10px 0;
+        }
+        .price-label {
+          font-size: 13px;
+        }
+        .price-value {
+          font-size: 13px;
+        }
+        .footer-note {
+          margin-top: 12px;
+          font-size: 12px;
+        }
+        /* ───── 분석 기준 ───── */
+        .criteria-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 8px;
+        }
+        /* ───── 이용 방법 ───── */
+        .steps-container {
+          margin-top: 16px;
+        }
+        /* ───── 로또 번호 시뮬레이터 ───── */
+        .section-simulator {
+          padding: 22px 0;
+        }
+        /* ───── FAQ ───── */
+        .section-faq {
+          padding: 22px 0;
+        }
+        .faq-question {
+          padding: 14px 0;
+          font-size: 17px;
+        }
+        .faq-answer p {
+          padding-bottom: 10px;
+          font-size: 15px;
+        }
+        /* ───── CTA ───── */
+        .section-cta {
+          padding: 24px 0;
+        }
+        .section-cta h2 {
+          font-size: 22px;
+          margin-bottom: 6px;
+        }
+        .section-cta p {
+          font-size: 14px;
+          margin-bottom: 16px;
+        }
+        /* ───── 푸터 ───── */
+        footer {
+          padding: 22px 0 12px;
+        }
+        .footer-content {
+          grid-template-columns: 1fr;
+          gap: 16px;
+          margin-bottom: 14px;
+          padding-bottom: 14px;
+          text-align: center;
+        }
+        .footer-tagline {
+          margin: 0 auto;
+          max-width: 100%;
+          font-size: 15px;
+          white-space: nowrap;
+        }
+        .footer-logo {
+          font-size: 20px;
+          margin-bottom: 8px;
+        }
+        .footer-links h4 {
+          margin-bottom: 10px;
+          font-size: 14px;
+        }
+        .footer-links ul {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 6px 14px;
+        }
+        .footer-links ul li {
+          margin-bottom: 0;
+        }
+        .footer-links ul li:not(:last-child)::after {
+          content: '·';
+          margin-left: 14px;
+          color: rgba(255,255,255,0.25);
+        }
+        .footer-bottom {
+          font-size: 12px;
+        }
+        .legal-disclaimer {
+          margin-top: 8px;
+          font-size: 11px;
+          padding: 8px;
+        }
+      }
+    </style>
+  </head>
+  <body style="">
+    <!-- Floating Index -->
+    <nav class="floating-index" id="floatingIndex">
+      <div class="fi-item" data-target="section-profile">
+        <span class="fi-label">프로필</span>
+        <span class="fi-dot"></span>
+      </div>
+      <div class="fi-item" data-target="hero">
+        <span class="fi-label">소개</span>
+        <span class="fi-dot"></span>
+      </div>
+      <div class="fi-item" data-target="section-proof">
+        <span class="fi-label">당첨 인증</span>
+        <span class="fi-dot"></span>
+      </div>
+      <div class="fi-item" data-target="why">
+        <span class="fi-label">왜 무료인가요?</span>
+        <span class="fi-dot"></span>
+      </div>
+      <div class="fi-item" data-target="section-cost">
+        <span class="fi-label">비용 부담 ZERO</span>
+        <span class="fi-dot"></span>
+      </div>
+      <div class="fi-item" data-target="criteria">
+        <span class="fi-label">분석 기준</span>
+        <span class="fi-dot"></span>
+      </div>
+      <div class="fi-item" data-target="how">
+        <span class="fi-label">이용 방법</span>
+        <span class="fi-dot"></span>
+      </div>
+      <div class="fi-item" data-target="section-simulator">
+        <span class="fi-label">추천 번호</span>
+        <span class="fi-dot"></span>
+      </div>
+      <div class="fi-item" data-target="faq">
+        <span class="fi-label">자주 묻는 질문</span>
+        <span class="fi-dot"></span>
+      </div>
+      <div class="fi-item" data-target="join">
+        <span class="fi-label">참여하기</span>
+        <span class="fi-dot"></span>
+      </div>
+    </nav>
+
+    <!-- Header -->
+    <header id="header">
+      <div class="nav-container">
+        <a href="#section-profile" class="logo"><i class="fa-solid fa-dice"></i> 김지윤의 로또분석생활</a>
+
+        <nav class="nav-menu">
+          <a href="#why" class="nav-link">무료 이유</a>
+          <a href="#criteria" class="nav-link">분석 기준</a>
+          <a href="#how" class="nav-link">이용 방법</a>
+          <a href="#faq" class="nav-link">FAQ</a>
+          <a href="#join" class="nav-cta">참여하기</a>
+        </nav>
+
+        <div class="mobile-menu-btn">
+          <i class="fa-solid fa-bars"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- Profile Section -->
+    <section class="section-profile" id="section-profile">
+      <div class="container">
+        <div class="profile-img-wrap">
+          <img src="https://page.gensparksite.com/get_upload_url/c8c38a8914fd882ee5aa7d2dfd0f3940174ce488347574dd5b55398d72e81771/default/633b0400-8249-4f6f-8cd6-ca0c01e9f5cf" alt="김지윤 프로필 - 빅데이터 분석 및 AI 전문 분석가" data-height-listener-added="true">
+        </div>
+      </div>
+    </section>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+      <div class="lotto-balls-bg">
+        <div class="floating-ball ball-1">22</div>
+        <div class="floating-ball ball-2">33</div>
+        <div class="floating-ball ball-3">3</div>
+        <div class="floating-ball ball-4">41</div>
+        <div class="floating-ball ball-5">44</div>
+        <div class="floating-ball ball-6">11</div>
+      </div>
+
+      <div class="container">
+        <div class="hero-content">
+          <p style="font-size: 20px; font-weight: 700; color: var(--accent); background: rgba(255,214,0,0.15); display: inline-block; padding: 10px 24px; border-radius: 30px; margin-bottom: 16px; border: 2px solid rgba(255,214,0,0.5); letter-spacing: 0.5px;">🎉 로또 지원금 최대 10만원 지원</p>
+          <h1>AI 데이터 분석으로<br>당첨 확률을 높이세요</h1>
+          <p>매주 금요일, 통계 기반 10조합을 무료로 카카오톡 발송해드립니다. 과학적인 분석으로 행운을 잡으세요.</p>
+
+          <div class="hero-buttons">
+            <a href="https://vvd.im/김지윤카카오톡" class="btn btn-primary btn-large btn-pulse" target="_blank" rel="noopener">무료 번호 받기</a>
+            <a href="#why" class="btn btn-secondary btn-large">서비스 소개</a>
+          </div>
+
+          <div class="trust-badges">
+            <span><i class="fa-solid fa-check"></i> 6개월+ 운영중</span>
+            <span><i class="fa-solid fa-check"></i> 100% 무료</span>
+            <span><i class="fa-solid fa-check"></i> 카카오톡 발송</span>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-item">
+              <h3>1,200+</h3>
+              <p>현재 참여자</p>
+            </div>
+            <div class="stat-item">
+              <h3>24회</h3>
+              <p>분석 발송 완료</p>
+            </div>
+            <div class="stat-item">
+              <h3 class="highlight">0원</h3>
+              <p>비용 부담 없음</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Proof Section -->
+    <section class="section-proof" id="section-proof">
+      <div class="container" style="text-align:center">
+        <div class="proof-label">✔ 실제 당첨 인증</div>
+        <div class="section-title">데이터로 증명된 결과</div>
+        <div class="section-subtitle">실제 참여자분들의 당첨 인증 사진입니다</div>
+        <div class="proof-img-wrap">
+          <img src="https://page.gensparksite.com/get_upload_url/c8c38a8914fd882ee5aa7d2dfd0f3940174ce488347574dd5b55398d72e81771/default/ee707112-47ca-46f5-8d87-acca600745f1" alt="실제 로또 당첨 인증 사진" data-height-listener-added="true">
+        </div>
+        <p class="proof-caption"><i class="fa-solid fa-circle-check"></i> 참여자 제공 실제 당첨 복권 사진 · 개인정보는 가려져 있습니다</p>
+      </div>
+    </section>
+
+    <!-- Why Free Section -->
+    <section class="section-why" id="why">
+      <div class="container">
+        <div class="section-title">왜 무료인가요?</div>
+        <div class="section-subtitle">많은 분들이 가장 궁금해하시는 부분입니다</div>
+
+        <div class="cards-grid">
+          <!-- Card 1 -->
+          <div class="info-card">
+            <div class="card-icon">
+              <i class="fa-solid fa-hand-holding-dollar"></i>
+            </div>
+            <div class="info-content">
+              <h3>금전요구 없음</h3>
+              <p style="font-size: 18px;">상담비, 가입비, 수수료 등 어떠한 항목으로도 금전을 요구하지 않습니다. 순수하게 정보만 제공합니다.</p>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="info-card">
+            <div class="card-icon">
+              <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <div class="info-content">
+              <h3>목적은 '데이터'입니다</h3>
+              <p style="font-size: 18px;">
+                제가 원하는 것은 여러분의 돈이 아닙니다. 실제 당첨 결과 데이터가 쌓일수록 제 프로그램은 더욱 정교해집니다.
+              </p>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="info-card highlight">
+            <div class="card-icon">
+              <i class="fa-solid fa-handshake-simple"></i>
+            </div>
+            <div class="info-content">
+              <h3>상호 이익 구조</h3>
+              <p style="font-size: 20px;">여러분은 분석된 번호로 당첨 기회를 얻으시고, 저는 당첨 결과 사진 한 장을 받아 데이터를 고도화합니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cost Zero Section -->
+    <section class="section-cost" id="section-cost">
+      <div class="watermark">FREE</div>
+      <div class="container cost-content">
+        <h2 class="section-title">비용 부담 ZERO</h2>
+
+        <div class="price-table">
+          <div class="price-row">
+            <span class="price-label">분석 번호 제공</span>
+            <span class="price-value">무료 <i class="fa-solid fa-check"></i></span>
+          </div>
+          <div class="price-row">
+            <span class="price-label">가입 상담비</span>
+            <span class="price-value">없음 <i class="fa-solid fa-check"></i></span>
+          </div>
+          <div class="price-row">
+            <span class="price-label">당첨 수수료</span>
+            <span class="price-value">없음 <i class="fa-solid fa-check"></i></span>
+          </div>
+          <div class="price-row">
+            <span class="price-label">유료 전환 요구</span>
+            <span class="price-value">없음 <i class="fa-solid fa-check"></i></span>
+          </div>
+        </div>
+
+        <p class="footer-note">현재 6개월 이상 모든 과정을 무료로 운영 중입니다.</p>
+      </div>
+    </section>
+
+    <!-- Analysis Criteria Section -->
+    <section class="section-criteria" id="criteria">
+      <div class="container">
+        <div class="section-title">분석 기준</div>
+        <div class="section-subtitle">매주 금요일, 카카오톡으로 발송됩니다</div>
+
+        <div class="criteria-grid">
+          <div class="criteria-item">
+            <div class="criteria-num">1</div>
+            <div class="criteria-text">최근 10년간 당첨 패턴 및 빈도 정밀 분석</div>
+          </div>
+          <div class="criteria-item">
+            <div class="criteria-num">2</div>
+            <div class="criteria-text">연속 출현 간격 및 번호 합계 균형 검증</div>
+          </div>
+          <div class="criteria-item">
+            <div class="criteria-num">3</div>
+            <div class="criteria-text">통계적으로 희박한 극단적 조합 자동 제외</div>
+          </div>
+          <div class="criteria-item">
+            <div class="criteria-num">4</div>
+            <div class="criteria-text">최종 정제된 고확률 10조합 선별 제공</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it Works Section -->
+    <section class="section-how" id="how">
+      <div class="container">
+        <div class="section-title">이용 방법</div>
+        <div class="section-subtitle">3단계로 간단하게 참여하세요</div>
+
+        <div class="steps-container">
+          <div class="step-item">
+            <div class="step-icon-wrapper">
+              <i class="fa-solid fa-comment-dots"></i>
+              <div class="step-num">1</div>
+            </div>
+            <h3 class="step-title">카카오톡 채널추가</h3>
+            <p class="step-desc" style="font-size: 16px;">아래 버튼을 눌러 공식 카카오 채널 친구 추가합니다.</p>
+          </div>
+
+          <div class="step-item">
+            <div class="step-icon-wrapper">
+              <i class="fa-solid fa-clipboard-check"></i>
+              <div class="step-num">2</div>
+            </div>
+            <h3 class="step-title">참여 신청</h3>
+            <p class="step-desc" style="font-size: 16px;">친구추가 이후 '당첨' 이라고 적어주시고 기다려주시면 상담시작됩니다.</p>
+          </div>
+
+          <div class="step-item">
+            <div class="step-icon-wrapper">
+              <i class="fa-solid fa-bullseye"></i>
+              <div class="step-num">3</div>
+            </div>
+            <h3 class="step-title">매주 번호수령</h3>
+            <p class="step-desc" style="font-size: 16px;">매주 금요일, 정밀 분석된 10조합을 카카오톡으로 편하게 받습니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Simulator Section -->
+    <section class="section-simulator" id="section-simulator">
+      <div class="container">
+        <div class="simulator-box">
+          <h3 style="color: var(--primary); margin-bottom: 10px">이번 주 추천 번호 예시</h3>
+          <p class="disclaimer" style="font-size: 22px;">※ 아래 번호는 단순 예시이며, 실제 분석 번호는 카카오톡으로 발송됩니다.</p>
+
+          <!-- 모자이크 래퍼 -->
+          <div class="mosaic-wrapper">
+            <div class="lotto-rows-inner">
+              <div class="lotto-row">
+                <div class="lotto-ball ball-yellow">3</div>
+                <div class="lotto-ball ball-blue">11</div>
+                <div class="lotto-ball ball-red">22</div>
+                <div class="lotto-ball ball-gray">33</div>
+                <div class="lotto-ball ball-green">41</div>
+                <div class="lotto-ball ball-green">44</div>
+              </div>
+
+              <div class="lotto-row">
+                <div class="lotto-ball ball-yellow">7</div>
+                <div class="lotto-ball ball-blue">15</div>
+                <div class="lotto-ball ball-red">24</div>
+                <div class="lotto-ball ball-red">29</div>
+                <div class="lotto-ball ball-gray">38</div>
+                <div class="lotto-ball ball-green">43</div>
+              </div>
+
+              <div class="lotto-row">
+                <div class="lotto-ball ball-yellow">2</div>
+                <div class="lotto-ball ball-blue">13</div>
+                <div class="lotto-ball ball-red">21</div>
+                <div class="lotto-ball ball-gray">31</div>
+                <div class="lotto-ball ball-gray">39</div>
+                <div class="lotto-ball ball-green">42</div>
+              </div>
+            </div>
+
+            <!-- 모자이크 오버레이 -->
+            <div class="mosaic-overlay">
+              <div class="mosaic-lock-icon"><i class="fa-solid fa-lock"></i></div>
+              <p class="mosaic-lock-text">실제 번호는 카카오톡 채널에서 확인하세요</p>
+            </div>
+          </div>
+
+          <div style="margin-top: 20px">
+            <a href="https://vvd.im/김지윤카카오톡" class="btn btn-primary btn-pulse" target="_blank" rel="noopener">실제 분석 번호 받기</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="section-faq" id="faq">
+      <div class="container">
+        <div class="section-title">자주 묻는 질문</div>
+        <div class="section-subtitle">궁금한 점을 확인하세요</div>
+
+        <div class="faq-container">
+          <div class="faq-item">
+            <div class="faq-question">정말 완전히 무료인가요? <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="faq-answer">
+              <p>
+                네, 100% 무료입니다. 상담비, 가입비, 수수료 등 어떠한 비용도 발생하지 않습니다. 현재 6개월 이상 모든
+                과정을 무료로 운영 중입니다. 유료 전환 요구도 절대 없습니다.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">왜 무료로 제공하나요? <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="faq-answer">
+              <p>
+                저의 목적은 여러분의 돈이 아닌 당첨 결과 데이터입니다. 여러분이 당첨되면 결과 사진 한 장을 공유해
+                주시면, 그 데이터로 프로그램을 더욱 정교하게 만들 수 있습니다. 상호 이익이 되는 구조입니다.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">번호는 어떻게 발송되나요? <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="faq-answer">
+              <p>매주 금요일 오후, 카카오톡 채널 메시지를 통해 분석된 10조합의 번호가 일괄 발송됩니다.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">개인정보는 안전한가요? <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="faq-answer">
+              <p>
+                네, 안전합니다. 카카오톡 채널 추가 외 어떠한 민감한 개인정보(주민등록번호 등)도 수집하지 않습니다.
+                발송을 위한 최소한의 정보만 활용됩니다.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">언제부터 번호를 받을 수 있나요? <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="faq-answer">
+              <p>신청 완료 후 돌아오는 가장 가까운 금요일부터 번호를 받으실 수 있습니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Banner -->
+    <section class="section-cta" id="join">
+      <div class="container">
+        <h2>지금 바로 무료로 시작하세요</h2>
+        <p>6개월 이상 운영된 신뢰할 수 있는 서비스</p>
+
+        <a href="https://vvd.im/김지윤카카오톡" class="btn btn-kakao btn-large btn-pulse" style="display: inline-flex" target="_blank" rel="noopener">
+          <i class="fa-solid fa-comment"></i> 카카오톡으로 참여하기
+        </a>
+
+        <p style="font-size: 14px; margin-top: 20px; color: var(--primary-dark)">
+          <i class="fa-regular fa-clock"></i> 참여 즉시 다음 금요일 번호를 받으실 수 있습니다
+        </p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div>
+            <a href="#section-profile" class="footer-logo">로또분석<span>.</span></a>
+            <p class="footer-tagline" style="font-size: 16px;">빅데이터 기반의 과학적인 로또 분석 시스템.</p>
+          </div>
+
+          <div class="footer-links">
+            <h4>서비스 안내</h4>
+            <ul>
+              <li><a href="#why">서비스 소개</a></li>
+              <li><a href="#criteria">분석 시스템</a></li>
+              <li><a href="#how">이용 가이드</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-links">
+            <h4>고객 지원</h4>
+            <ul>
+              <li><a href="#faq">자주 묻는 질문</a></li>
+              <li><a href="#join">참여 문의</a></li>
+              <li><a href="#">오류 제보</a></li>
+            </ul>
+          </div>
+        </div>
+
+
+      </div>
+    </footer>
+
+    <!-- JavaScript for Interactions -->
+    <script>
+      // FAQ Accordion
+      document.querySelectorAll('.faq-question').forEach((question) => {
+        question.addEventListener('click', () => {
+          const item = question.parentNode;
+          const isActive = item.classList.contains('active');
+
+          // Close all other items
+          document.querySelectorAll('.faq-item').forEach((i) => {
+            i.classList.remove('active');
+            i.querySelector('.faq-answer').style.maxHeight = null;
+          });
+
+          // Toggle current item
+          if (!isActive) {
+            item.classList.add('active');
+            const answer = item.querySelector('.faq-answer');
+            answer.style.maxHeight = answer.scrollHeight + 'px';
+          }
+        });
+      });
+
+      // Smooth Scroll
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener('click', function (e) {
+          const href = this.getAttribute('href');
+          if (!href || href === '#') return;
+          e.preventDefault();
+          const target = document.querySelector(href);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
+      });
+
+      // Sticky Header Effect
+      window.addEventListener('scroll', () => {
+        const header = document.getElementById('header');
+        if (window.scrollY > 50) {
+          header.style.boxShadow = '0 5px 20px rgba(0,0,0,0.1)';
+        } else {
+          header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.05)';
+        }
+      });
+
+      // Floating Index – scroll spy
+      const fiItems = document.querySelectorAll('.fi-item');
+      const sectionIds = ['section-profile','hero','section-proof','why','section-cost','criteria','how','section-simulator','faq','join'];
+
+      function updateIndex() {
+        let current = sectionIds[0];
+        const offset = 120;
+        sectionIds.forEach(id => {
+          const el = document.getElementById(id);
+          if (el && window.scrollY >= el.offsetTop - offset) {
+            current = id;
+          }
+        });
+        fiItems.forEach(item => {
+          if (item.dataset.target === current) {
+            item.classList.add('active');
+          } else {
+            item.classList.remove('active');
+          }
+        });
+      }
+      window.addEventListener('scroll', updateIndex);
+      updateIndex();
+
+      // Floating Index – click to scroll
+      fiItems.forEach(item => {
+        item.addEventListener('click', () => {
+          const target = document.getElementById(item.dataset.target);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
+      });
+
+      // Mobile Menu Toggle
+      const mobileBtn = document.querySelector('.mobile-menu-btn');
+      const navMenu = document.querySelector('.nav-menu');
+
+      mobileBtn.addEventListener('click', () => {
+        if (navMenu.style.display === 'flex') {
+          navMenu.style.display = 'none';
+        } else {
+          navMenu.style.display = 'flex';
+          navMenu.style.flexDirection = 'column';
+          navMenu.style.position = 'absolute';
+          navMenu.style.top = '70px';
+          navMenu.style.left = '0';
+          navMenu.style.width = '100%';
+          navMenu.style.backgroundColor = 'white';
+          navMenu.style.padding = '20px';
+          navMenu.style.boxShadow = '0 5px 10px rgba(0,0,0,0.1)';
+        }
+      });
+    </script>
+  
+
+</body></html>
